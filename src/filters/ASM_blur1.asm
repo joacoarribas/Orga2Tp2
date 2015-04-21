@@ -72,9 +72,10 @@ ASM_blur1:
   .cargoPrimerFila:
     ; en r14 tengo el primer vector
     ; en r13 tengo el puntero a mi imagen
-    mov edx, [r13 + i * OFFSET_DATO] ; guardo en edx el pixel = 4 BYTES
-    mov [r14 + i * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
-    inc i ; me muevo una columna
+    mov rax, i
+    mov edx, [r13 + rax * OFFSET_DATO] ; guardo en edx el pixel = 4 BYTES
+    mov [r14 + rax * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
+    inc qword i ; me muevo una columna
     loop .cargoPrimerFila
 ; preguntar si i esta en memoria o que onda, vale inc i?
 
