@@ -32,9 +32,9 @@ ASM_blur1:
   ; rsi tengo el heigth, cantidad de elementos por columna 
   ; rcx tengo la matriz
 
-  xor rbx, rbx ; limpio rbx
+  ; xor rbx, rbx ; limpio rbx
   mov ebx, edi ; guardo en rbx la cantidad de elementos por fila
-  xor r12, r12 ; limpio r12
+  ; xor r12, r12 ; limpio r12
   mov r12d, esi ; guardo en r12 la cantidad de elementos por columna
   mov r13, rcx ; guardo en r14 el puntero a mi imagen
 
@@ -68,7 +68,7 @@ ASM_blur1:
   je .fin ; si es asi no tengo nada que hacer
 
 
-  mov rcx, rbx ; guardo en rcx la cantidad de elementos en una fila
+  mov ecx, ebx ; guardo en rcx la cantidad de elementos en una fila
   .cargoPrimerFila:
     ; en r14 tengo el primer vector
     ; en r13 tengo el puntero a mi imagen
@@ -77,18 +77,35 @@ ASM_blur1:
     mov [r14 + rax * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
     inc qword i ; me muevo una columna
     loop .cargoPrimerFila
-; preguntar si i esta en memoria o que onda, vale inc i?
 
+  mov esi, ebx ; guardo en esi la cantidad de columas
+  dec esi ; voy a recorrer salteand el primer y ultimo elemento 
 
-  mov rcx, r12 ; muevo a rcx la cantidad de filas que tengo
-  dec rcx 
-  dec rcx ; tengo h-2 iteraciones
+  mov ecx, r12d ; muevo a rcx la cantidad de filas que tengo
+  dec ecx ; tengo h-2 iteraciones
+  mov qword j, 1 ; contador de elementos columna en 1
   .ciclo:
     mov rdx, r15 ; guardo en rdx (temp) mi vector 0
     mov r15, r14 ; guardo en r15 (vector 0) r14 (vector 1)
     mov r14, rdx ; guardo en r14 (vector 1) mi vector 0
+    mov qword i, 0 ; limpio mi contador i para recorrer filas
+    
     .cargarSiguienteVector:
-      
+      cmp ebx, i ; me fijo si ya recorri todos los elementos de la fila
+      je .promediar
+      mov rax, i ; guardo en rax mi indice
+      mov edx, [r13 + rax * OFFSET_DATO] ; guardo en edx el pixel = 4 BYTES
+      mov [r14 + rax * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
+      inc qword i ; me muevo una columna
+      jmp .cargarSiguienteVector
+
+    .promediar:
+      mov xmm0, [r15] ; guardo en xmm0 4 pixeles del vector 0
+      mov xmm1, [r14] ; guardo en xmm1 4 pixeles del vector 1
+      inc j 
+      mov rax, j ; guardo en rax mi indice
+      mov xmm2, [r13 + rax * OFFSET_DATO] ; guardo en xmm2 4 pixeles de la tercer fila
+      ; desempaquetar, sumar componente a componente, empaquetar
     
 
 
