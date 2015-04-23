@@ -73,8 +73,8 @@ ASM_blur1:
     ; en r14 tengo el primer vector
     ; en r13 tengo el puntero a mi imagen
     mov rax, i
-    mov edx, [r13 + rax * OFFSET_DATO] ; guardo en edx el pixel = 4 BYTES
-    mov [r14 + rax * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
+    movd edx, [r13 + rax * OFFSET_DATO] ; guardo en edx el pixel = 4 BYTES
+    movd [r14 + rax * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
     inc qword i ; me muevo una columna
     loop .cargoPrimerFila
 
@@ -94,19 +94,28 @@ ASM_blur1:
       cmp ebx, i ; me fijo si ya recorri todos los elementos de la fila
       je .promediar
       mov rax, i ; guardo en rax mi indice
-      mov edx, [r13 + rax * OFFSET_DATO] ; guardo en edx el pixel = 4 BYTES
-      mov [r14 + rax * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
+      movd edx, [r13 + rax * OFFSET_DATO] ; guardo en edx el pixel = 4 BYTES
+      movd [r14 + rax * OFFSET_DATO], edx ; guardo en el vector el pixel copiado de la imagen
       inc qword i ; me muevo una columna
       jmp .cargarSiguienteVector
 
     .promediar:
-      mov xmm0, [r15] ; guardo en xmm0 4 pixeles del vector 0
-      mov xmm1, [r14] ; guardo en xmm1 4 pixeles del vector 1
+      movdqu xmm0, [r15] ; guardo en xmm0 4 pixeles del vector 0
+      movdqu xmm1, [r14] ; guardo en xmm1 4 pixeles del vector 1
       inc j 
       mov rax, j ; guardo en rax mi indice
-      mov xmm2, [r13 + rax * OFFSET_DATO] ; guardo en xmm2 4 pixeles de la tercer fila
+      movdqu xmm2, [r13 + rax * OFFSET_DATO] ; guardo en xmm2 4 pixeles de la tercer fila
       ; desempaquetar, sumar componente a componente, empaquetar
-    
+      ; xmmo = m0p3 | m0p2 | m0p1 | m0p0  
+      ; xmm1 = m1p3 | m1p2 | m1p1 | m1p0  
+      ; xmm2 = m2p3 | m2p2 | m2p1 | m2p0  
+      ; agarrar todos los px0, pasarlos registros 128, sumarlos, hasta px3
+      pxor xmm7, xmm7 ; xmm7 = 0
+      movdqu xmm8, xmm0 ; xmm8 va a tener la parte alta de xmm0
+      punpcklwd xmm0, xmm7 ; intercalo ceros con px0 y px1 | 0 | px1h | 0 | px1l | 0 | px0h | 0 | px0l 
+      punpckhwd xmm8, xmm7 ; intercalo ceros con px2 y px3 | 0 | px3h | 0 | px3l | 0 | px2h | 0 | px2l
+      ; packuswb x
+      punpcklwd xmm0, xmm1 ; | m1p1H | m0p1H | m1p1L | m0p1L | m1p0H | m0p0H | m1p0L | m0p0L
 
 
 
