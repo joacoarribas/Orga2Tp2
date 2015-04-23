@@ -129,7 +129,7 @@ ASM_blur1:
 
       paddw xmm0, xmm8 ; xmm0 = | 0 | 0 | 0 | 0  | 0 | 0  | 0 | 0  | 0 | A0+A1+A2 | 0 | B0+B1+B2 | 0 | G0+G1+G2 | 0 | R0+R1+R2 |
 
-      packuswb xmm0, xmm7 ; xmm0 = | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | A0+A1+A2 | B0+B1+B2 | G0+G1+G2 | R0+R1+R2 |
+      ; packuswb xmm0, xmm7 ; xmm0 = | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | A0+A1+A2 | B0+B1+B2 | G0+G1+G2 | R0+R1+R2 |
 
 
       pxor xmm7, xmm7 ; xmm7 = 0
@@ -147,7 +147,7 @@ ASM_blur1:
 
       paddw xmm1, xmm8 ; xmm1 = | 0 | 0 | 0 | 0  | 0 | 0  | 0 | 0  | 0 | A0+A1+A2 | 0 | B0+B1+B2 | 0 | G0+G1+G2 | 0 | R0+R1+R2 |
 
-      packuswb xmm1, xmm7 ; xmm1 = | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | A0+A1+A2 | B0+B1+B2 | G0+G1+G2 | R0+R1+R2 |
+      ; packuswb xmm1, xmm7 ; xmm1 = | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | A0+A1+A2 | B0+B1+B2 | G0+G1+G2 | R0+R1+R2 |
       
 
       pxor xmm7, xmm7 ; xmm7 = 0
@@ -165,14 +165,14 @@ ASM_blur1:
 
       paddw xmm2, xmm8 ; xmm2 = | 0 | 0 | 0 | 0  | 0 | 0  | 0 | 0  | 0 | A0+A1+A2 | 0 | B0+B1+B2 | 0 | G0+G1+G2 | 0 | R0+R1+R2 |
 
-      packuswb xmm2, xmm7 ; xmm2 = | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | A0+A1+A2 | B0+B1+B2 | G0+G1+G2 | R0+R1+R2 |
+      ; packuswb xmm2, xmm7 ; xmm2 = | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | A0+A1+A2 | B0+B1+B2 | G0+G1+G2 | R0+R1+R2 |
 
 
-      punpcklbw xmm0, xmm7 ; xmm0 = suma de los tres pixeles de la primer fila intercalados con ceros 
+      ;punpcklbw xmm0, xmm7 ; xmm0 = suma de los tres pixeles de la primer fila intercalados con ceros 
       
-      punpcklbw xmm1, xmm7 ; xmm1 = suma de los tres pixeles de la segunda fila intercalados con ceros 
+      ;punpcklbw xmm1, xmm7 ; xmm1 = suma de los tres pixeles de la segunda fila intercalados con ceros 
 
-      punpcklbw xmm2, xmm7 ; xmm2 = suma de los tres pixeles de la tercer fila intercalados con ceros 
+      ;punpcklbw xmm2, xmm7 ; xmm2 = suma de los tres pixeles de la tercer fila intercalados con ceros 
 
       paddw xmm1, xmm2
       paddw xmm0, xmm1
@@ -203,18 +203,15 @@ ASM_blur1:
 
       pxor xmm10, xmm10
 
-
       cvtpd2dq xmm10, xmm6 ; xmm10 = 0 | 0 | 0 | 0 | sumA/9 | sumB/9
 
       pslldq xmm10, 8
 
       cvtpd2dq xmm10, xmm6 ; xmm10 = | sumA/9 | sumB/9 | sumG/9 | sumR/9 |
 
-  
 
       packusdw xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
       packuswb xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
-
 
       movd r8d, xmm10 ; guardo el pixel en 32 bits
 
