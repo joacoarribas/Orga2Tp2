@@ -12,7 +12,7 @@ global ASM_blur1
 extern malloc
 
 section .rodata
-  nueve: dd 0x00090009
+  nueve: dd 0x0000000900000009
 
 section .text
 
@@ -132,6 +132,9 @@ ASM_blur1:
 
       psrldq xmm8, 8 ; xmm8 = | 0 | 0 | 0 | 0 | 0 | 0  | 0 | 0  | 0 | A1 | 0 | B1 | 0 | G1 | 0 | R1 |
 
+      pslldq xmm0, 8
+      psrldq xmm0, 8
+
       paddw xmm0, xmm8 ; xmm0 = | 0 | 0 | 0 | 0  | 0 | 0  | 0 | 0  | 0 | A0+A1+A2 | 0 | B0+B1+B2 | 0 | G0+G1+G2 | 0 | R0+R1+R2 |
 
 
@@ -177,15 +180,18 @@ ASM_blur1:
       pxor xmm5, xmm5
       pxor xmm6, xmm6 
       pxor xmm7, xmm7
+
+      punpcklwd xmm9, xmm7 ; | sumA | sumB | sumG | sumR |
+
       cvtdq2pd xmm5, xmm9 ; xmm5 = sumG | sumR
 
-      psrldq xmm9, 4 ; xmm9 = 0 | 0 | 0 | 0 | 0 | 0 | sumA | sumB
+      psrldq xmm9, 8 ; xmm9 = 0 | 0 | sumA | sumB
 
       cvtdq2pd xmm6, xmm9 ; xmm6 = sumA | sumB
 
       mov r8d, nueve 
 
-      movd xmm4, r8d ; xmm4 = 0 | 0 | 0 | 0 | 0 | 0 | 9 | 9 |
+      movd xmm4, r8d ; xmm4 = 0 | 0 | 9 | 9 |
 
       cvtdq2pd xmm7, xmm4 ; xmm7 = 9 | 9  
 
@@ -197,13 +203,17 @@ ASM_blur1:
 
       cvtpd2dq xmm10, xmm6 ; xmm10 = 0 | 0 | 0 | 0 | sumA/9 | sumB/9
 
-      pslldq xmm10, 8
+      pslldq xmm10, 8 ; xmm10 = sumA/9 | sumB/9 | 0 | 0
 
-      cvtpd2dq xmm10, xmm6 ; xmm10 = | sumA/9 | sumB/9 | sumG/9 | sumR/9 |
+      pxor xmm7, xmm7
 
+      cvtpd2dq xmm7, xmm6 ; xmm7 = | 0 | 0 | sumG/9 | sumR/9 |
 
-      packusdw xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
-      packuswb xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
+      paddd xmm10, xmm7
+
+      pxor xmm7, xmm7
+      packssdw xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
+      packsswb xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
 
       movd r8d, xmm10 ; guardo el pixel en 32 bits
 
