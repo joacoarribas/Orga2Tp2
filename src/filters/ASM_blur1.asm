@@ -202,6 +202,7 @@ ASM_blur1:
       cvtpd2dq xmm10, xmm6 ; xmm10 = | sumA/9 | sumB/9 | sumG/9 | sumR/9 |
 
 
+      pxor xmm7, xmm7
       packusdw xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
       packuswb xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
 
