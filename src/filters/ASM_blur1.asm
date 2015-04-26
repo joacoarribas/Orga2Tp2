@@ -209,8 +209,8 @@ ASM_blur1:
       paddd xmm10, xmm7
 
       pxor xmm7, xmm7
-      packusdw xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
-      packuswb xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
+      packssdw xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
+      packsswb xmm10, xmm7 ; xmm0 tiene en los primeros 32 bits la suma de los 9 pixeles = | 0 | 0 | 0 | pixel |
 
       movd r8d, xmm10 ; guardo el pixel en 32 bits
 
