@@ -12,7 +12,7 @@ global ASM_blur1
 extern malloc
 
 section .rodata
-  nueve: dq 0x0000000900000009
+  nueve: dq 0000000900000009h
 
 section .text
 
@@ -197,7 +197,7 @@ ASM_blur1:
 
       mov r8, nueve 
 
-      movq xmm4, r8 ; xmm4 = 0 | 0 | 9 | 9 |
+      movq qword xmm4, [r8] ; xmm4 = 0 | 0 | 9 | 9 |
 
       cvtdq2pd xmm7, xmm4 ; xmm7 = 9 | 9  
 
@@ -213,7 +213,7 @@ ASM_blur1:
 
       pxor xmm7, xmm7
 
-      cvtpd2dq xmm7, xmm6 ; xmm7 = | 0 | 0 | sumG/9 | sumR/9 |
+      cvtpd2dq xmm7, xmm5 ; xmm7 = | 0 | 0 | sumG/9 | sumR/9 |
 
       paddd xmm10, xmm7
 
