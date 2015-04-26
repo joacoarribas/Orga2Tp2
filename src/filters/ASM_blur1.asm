@@ -132,6 +132,9 @@ ASM_blur1:
 
       psrldq xmm8, 8 ; xmm8 = | 0 | 0 | 0 | 0 | 0 | 0  | 0 | 0  | 0 | A1 | 0 | B1 | 0 | G1 | 0 | R1 |
 
+      pslldq xmm0, 8
+      psrldq xmm0, 8
+
       paddw xmm0, xmm8 ; xmm0 = | 0 | 0 | 0 | 0  | 0 | 0  | 0 | 0  | 0 | A0+A1+A2 | 0 | B0+B1+B2 | 0 | G0+G1+G2 | 0 | R0+R1+R2 |
 
 
@@ -148,6 +151,9 @@ ASM_blur1:
 
       psrldq xmm8, 8 ; xmm8 = | 0 | 0 | 0 | 0 | 0 | 0  | 0 | 0  | 0 | A1 | 0 | B1 | 0 | G1 | 0 | R1 |
 
+      pslldq xmm1, 8
+      psrldq xmm1, 8
+
       paddw xmm1, xmm8 ; xmm1 = | 0 | 0 | 0 | 0  | 0 | 0  | 0 | 0  | 0 | A0+A1+A2 | 0 | B0+B1+B2 | 0 | G0+G1+G2 | 0 | R0+R1+R2 |
 
 
@@ -163,6 +169,9 @@ ASM_blur1:
       movdqu xmm8, xmm2 ; xmm8 = | 0 | A1 | 0 | B1 | 0 | G1 | 0 | R1 | 0 | A0+A2 | 0 | B0+B2 | 0 | G0+G2 | 0 | R0+R2 |
 
       psrldq xmm8, 8 ; xmm8 = | 0 | 0 | 0 | 0 | 0 | 0  | 0 | 0  | 0 | A1 | 0 | B1 | 0 | G1 | 0 | R1 |
+
+      pslldq xmm2, 8
+      psrldq xmm2, 8
 
       paddw xmm2, xmm8 ; xmm2 = | 0 | 0 | 0 | 0  | 0 | 0  | 0 | 0  | 0 | A0+A1+A2 | 0 | B0+B1+B2 | 0 | G0+G1+G2 | 0 | R0+R1+R2 |
 
