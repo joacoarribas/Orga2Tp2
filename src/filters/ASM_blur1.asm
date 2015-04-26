@@ -186,9 +186,9 @@ ASM_blur1:
 
       cvtdq2pd xmm6, xmm9 ; xmm6 = sumA | sumB
 
-      mov r8d, nueve 
+      mov r8, nueve 
 
-      movd xmm4, r8d ; xmm4 = 0 | 0 | 9 | 9 |
+      movd xmm4, r8 ; xmm4 = 0 | 0 | 9 | 9 |
 
       cvtdq2pd xmm7, xmm4 ; xmm7 = 9 | 9  
 
